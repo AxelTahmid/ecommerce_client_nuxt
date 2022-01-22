@@ -110,7 +110,7 @@
                   <img src="images/icon/avatar-01.jpg" alt="John Doe" />
                 </div>
                 <div class="content">
-                  <a class="js-acc-btn" href="#">john doe</a>
+                  <a class="js-acc-btn" href="#">{{ getUserData().name }}</a>
                 </div>
                 <div class="account-dropdown js-dropdown">
                   <div class="info clearfix">
@@ -121,9 +121,9 @@
                     </div>
                     <div class="content">
                       <h5 class="name">
-                        <a href="#">john doe</a>
+                        <a href="#">{{ getUserData().name }}</a>
                       </h5>
-                      <span class="email">johndoe@example.com</span>
+                      <span class="email">{{ getUserData().email }}</span>
                     </div>
                   </div>
                   <div class="account-dropdown__body">
@@ -132,7 +132,9 @@
                     </div>
                   </div>
                   <div class="account-dropdown__footer">
-                    <a href="#"> <i class="zmdi zmdi-power"></i>Logout</a>
+                    <a href="#" @click.prevent="logout()">
+                      <i class="zmdi zmdi-power"></i>Logout</a
+                    >
                   </div>
                 </div>
               </div>
@@ -147,5 +149,32 @@
 <script>
 export default {
   name: 'AdminHeader',
+  methods: {
+    getUserData() {
+      return JSON.parse(localStorage.getItem('user_data'))
+    },
+    logout() {
+      this.$axios.setHeader(
+        'Authorization',
+        'Bearer ' + localStorage.getItem('auth_token')
+      )
+      this.$axios
+        .get('/api/logout')
+        .then((response) => {
+          if (response.data.success) {
+            localStorage.removeItem('auth_token')
+            localStorage.removeItem('is_authenticated')
+            localStorage.removeItem('user_data')
+
+            this.$router.push('/login')
+          }
+        })
+        .catch((err) => {
+          console.log(err.response)
+        })
+    },
+  },
 }
 </script>
+
+// name: '',
