@@ -1,4 +1,6 @@
 export default {
+  srcDir: __dirname,
+  buildDir: '.nuxt/frontend',
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'frontend',

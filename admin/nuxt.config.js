@@ -1,4 +1,6 @@
 export default {
+  srcDir: __dirname,
+  buildDir: '.nuxt/admin',
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
