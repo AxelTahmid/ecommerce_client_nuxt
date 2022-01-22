@@ -1,9 +1,6 @@
 export default {
-  srcDir: __dirname,
-  buildDir: '.nuxt/admin',
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
-
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'admin',
@@ -13,7 +10,50 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', type: 'text/css', href: '/css/font-face.css' },
+      {
+        rel: 'stylesheet',
+        type: 'text/css',
+        href: '/vendor/font-awesome-4.7/css/font-awesome.min.css',
+      },
+      {
+        rel: 'stylesheet',
+        type: 'text/css',
+        href: '/vendor/font-awesome-5/css/fontawesome-all.min.css',
+      },
+      {
+        rel: 'stylesheet',
+        type: 'text/css',
+        href: '/vendor/mdi-font/css/material-design-iconic-font.min.css',
+      },
+      {
+        rel: 'stylesheet',
+        type: 'text/css',
+        href: '/vendor/bootstrap-4.1/bootstrap.min.css',
+      },
+      {
+        rel: 'stylesheet',
+        type: 'text/css',
+        href: '/vendor/css-hamburgers/hamburgers.min.css',
+      },
+      { rel: 'stylesheet', type: 'text/css', href: '/css/theme.css' },
+    ],
+    script: [
+      {
+        src: '/vendor/jquery-3.2.1.min.js',
+        type: 'text/javascript',
+      },
+      {
+        src: '/vendor/bootstrap-4.1/popper.min.js',
+        type: 'text/javascript',
+      },
+      {
+        src: '/vendor/bootstrap-4.1/bootstrap.min.js',
+        type: 'text/javascript',
+      },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -44,7 +84,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
+    baseURL: 'http://localhost/ecommlumen/public/',
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -56,4 +96,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+  srcDir: __dirname,
+  buildDir: '.nuxt/admin',
 }
