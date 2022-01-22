@@ -4,6 +4,7 @@
 
 <script>
 export default {
-  name: 'IndexPage',
+  name: 'Index',
+  middleware: 'auth',
 }
 </script>
