@@ -12,12 +12,27 @@ module.exports = {
   plugins: [],
   // add your custom rules here
   rules: {
-    'vue/multi-word-component-names': [
-      'error',
-      {
-        ignores: ['default', 'login', 'index', 'Default', 'Login', 'Index'],
-      },
-    ],
     'no-console': 'off',
+    'vue/multi-word-component-names': 'off',
+
+    // [
+    //   'error',
+    //   {
+    //     ignores: [
+    //       'default',
+    //       'Default',
+    //       'login',
+    //       'Login',
+    //       'index',
+    //       'Index',
+    //       'create',
+    //       'Create',
+    //       'edit',
+    //       'Edit',
+    //       'loader',
+    //       'Loader',
+    //     ],
+    //   },
+    // ],
   },
 }
