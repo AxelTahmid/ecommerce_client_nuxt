@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="this.$store.state.shared.status_messages.showLoading">
     <div class="lds-roller">
       <div></div>
       <div></div>

@@ -14,6 +14,7 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'vue/multi-word-component-names': 'off',
+    'vue/this-in-template': 'off',
 
     // [
     //   'error',

@@ -4,7 +4,6 @@
       <div class="container-fluid">
         <loader></loader>
         <status-messages></status-messages>
-
         <form method="post" action="#" @submit.prevent="save()">
           <div class="row">
             <div class="col-lg-6">
@@ -17,6 +16,7 @@
                     <label for="title" class="form-control-label">Title</label>
                     <input
                       id="title"
+                      v-model="title"
                       type="text"
                       name="title"
                       placeholder="Enter category title"
@@ -29,8 +29,10 @@
                     >
                     <select
                       id="parent_id"
+                      v-model="parent_id"
                       name="parent_id"
                       class="form-control"
+                      v-html="categoryTree"
                     ></select>
                   </div>
                 </div>
@@ -45,6 +47,7 @@
                     >
                     <textarea
                       id="description"
+                      v-model="description"
                       name="description"
                       class="form-control"
                     ></textarea>
@@ -53,7 +56,12 @@
                     <label for="featured" class="form-control-label"
                       >Is Featured</label
                     >
-                    <select id="featured" name="featured" class="form-control">
+                    <select
+                      id="featured"
+                      v-model="featured"
+                      name="featured"
+                      class="form-control"
+                    >
                       <option value="0">No</option>
                       <option value="1">Yes</option>
                     </select>
@@ -97,10 +105,58 @@ export default {
     statusMessages,
   },
   middleware: 'auth',
-  computed: {},
-  mounted() {},
+  fetch() {
+    this.$store.dispatch('category/getCategoryHtmlTree')
+  },
+  computed: {
+    title: {
+      set(title) {
+        this.$store.commit('category/setTitle', title)
+      },
+      get() {
+        return this.$store.state.category.category.title
+      },
+    },
+    parent_id: {
+      // changed parent_id
+      set(parentID) {
+        this.$store.commit('category/setParentId', parentID)
+      },
+      get() {
+        return this.$store.state.category.category.parent_id
+      },
+    },
+    description: {
+      set(description) {
+        this.$store.commit('category/setDescription', description)
+      },
+      get() {
+        return this.$store.state.category.category.description
+      },
+    },
+    featured: {
+      set(featured) {
+        this.$store.commit('category/setFeatured', featured)
+      },
+      get() {
+        return this.$store.state.category.category.featured
+      },
+    },
+    categoryTree() {
+      return this.$store.state.category.categoryHtmlTree
+    },
+  },
+  mounted() {
+    this.$store.commit('category/resetCategory')
+  },
   methods: {
-    save() {},
+    save() {
+      this.$store.dispatch('category/create', {
+        data: this.$store.state.category.category,
+        features: this.$store.state.category.features,
+        router: this.$router,
+      })
+    },
   },
 }
 </script>
