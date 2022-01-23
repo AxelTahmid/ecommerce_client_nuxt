@@ -1,10 +1,15 @@
 <template>
+  <!-- eslint-disable vue/this-in-template  -->
   <ul :class="ulclass">
-    <li class="active">
-      <a href="#"> <i class="fas fa-tachometer-alt"></i>Dashboard</a>
+    <li :class="{ active: this.$route.path === '/' }">
+      <nuxt-link to="/">
+        <i class="fas fa-tachometer-alt"></i>Dashboard
+      </nuxt-link>
     </li>
-    <li>
-      <a href="#"> <i class="fas fa-list"></i>Categories</a>
+    <li :class="{ active: this.$route.path.indexOf('category') !== -1 }">
+      <nuxt-link to="/category">
+        <i class="fas fa-list"></i>Categories
+      </nuxt-link>
     </li>
     <li>
       <a href="#"> <i class="fas fa-television"></i>Brands</a>
