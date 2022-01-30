@@ -16,8 +16,10 @@
         <i class="fas fa-television"></i>Brands
       </nuxt-link>
     </li>
-    <li>
-      <a href="#"> <i class="fas fa-shopping-cart"></i>Products</a>
+    <li :class="{ active: this.$route.path.indexOf('product') !== -1 }">
+      <nuxt-link to="/product">
+        <i class="fas fa-shopping-cart"></i>Products
+      </nuxt-link>
     </li>
     <li>
       <a href="#"> <i class="fas fa-gears"></i>Orders</a>
@@ -37,6 +39,7 @@
 <script>
 export default {
   name: 'NavMenu',
+  // eslint-disable-next-line vue/require-prop-types
   props: ['ulclass'],
 }
 </script>
