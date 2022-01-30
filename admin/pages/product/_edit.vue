@@ -39,10 +39,26 @@ export default {
       id: '',
     }
   },
-  fetch() {},
-  mounted() {},
+  fetch() {
+    this.$store.dispatch('category/getCategoryHtmlTree')
+    this.$store.dispatch('brand/getAllBrands')
+
+    // load product details
+    // eslint-disable-next-line nuxt/no-timing-in-fetch-data
+    setTimeout(() => {
+      if (this.$route.params.edit) {
+        this.id = this.$route.params.edit
+        this.$store.dispatch('product/show', this.$route.params.edit)
+      }
+    }, 200)
+  },
   methods: {
-    update() {},
+    update() {
+      this.$store.dispatch('product/update', {
+        id: this.id,
+        router: this.$router,
+      })
+    },
   },
 }
 </script>

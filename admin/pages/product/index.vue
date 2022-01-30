@@ -6,9 +6,10 @@
           <div class="col-md-12">
             <loader></loader>
             <status-messages></status-messages>
+
+            <ProductFilter @Filtering="handleFiltering"></ProductFilter>
           </div>
           <div class="col-md-12">
-            <!-- DATA TABLE-->
             <div class="table-responsive m-b-40">
               <table class="table table-borderless table-data3">
                 <thead>
@@ -24,57 +25,19 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>
-                      Samsung 32 Inch HD Smart TV with Built-in Receiver -
-                      Black, UA32N5300ASXEG
-                    </td>
-                    <td></td>
-                    <td><span class="badge badge-info">200 $</span></td>
-                    <td><strong class="inventory">10</strong></td>
-                    <td>Mobiles</td>
-                    <td>admin</td>
-                    <td>
-                      <ul class="nav nav-tabs options-dropdown">
-                        <li class="nav-item dropdown">
-                          <a
-                            class="nav-link"
-                            data-toggle="dropdown"
-                            href="#"
-                            role="button"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                          >
-                            <svg
-                              width="1em"
-                              height="1em"
-                              viewBox="0 0 16 16"
-                              class="bi bi-three-dots-vertical"
-                              fill="currentColor"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                fill-rule="evenodd"
-                                d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
-                              />
-                            </svg>
-                          </a>
-                          <div class="dropdown-menu">
-                            <a
-                              href="#"
-                              class="dropdown-item btn btn-info btn-sm"
-                              ><i class="fa fa-edit"></i> Edit</a
-                            >
-                            <a
-                              href="#"
-                              class="dropdown-item btn btn-danger btn-sm"
-                              ><i class="fa fa-remove"></i> Remove</a
-                            >
-                          </div>
-                        </li>
-                      </ul>
-                    </td>
+                  <template
+                    v-if="productList.data && productList.data.length > 0"
+                  >
+                    <ProductRow
+                      v-for="product of productList.data"
+                      :key="product.id"
+                      :product="product"
+                      @removeProduct="removeProduct"
+                    ></ProductRow
+                  ></template>
+
+                  <tr v-if="productList.data && productList.data.length === 0">
+                    <td colspan="8" class="text-center">No results found</td>
                   </tr>
                 </tbody>
               </table>
@@ -92,24 +55,68 @@
 </template>
 
 <script>
+/* eslint-disable no-undef */
+import ProductFilter from '../../components/product-components/ProductFilter'
 import Loader from '../../components/helpers/loader'
 import StatusMessages from '../../components/helpers/statusMessages'
+import ProductRow from '../../components/product-components/ProductRow'
 import Pagination from '../../components/helpers/Pagination'
 export default {
   name: 'Index',
   components: {
     Pagination,
+    ProductRow,
     StatusMessages,
     Loader,
+    ProductFilter,
   },
-  fetch() {},
+  fetch() {
+    this.$store.dispatch('product/listProducts')
+    this.$store.dispatch('category/getCategoryHtmlTree')
+    this.$store.dispatch('brand/getAllBrands')
+  },
   computed: {
     productList() {
       return this.$store.state.product.product_list
     },
   },
+
+  mounted() {
+    // re-initialize tabs
+    setTimeout(() => {
+      if ($('.options-dropdown').length) {
+        $('.options-dropdown').tab()
+      }
+    }, 300)
+  },
   methods: {
-    handlePagination(pageNumber) {},
+    handleFiltering(field, value) {
+      this.$store.commit('product/setFilterData', { key: field, val: value })
+      this.$store.commit('product/setPage', 1)
+
+      this.$store.dispatch('product/listProducts', this.getPayload())
+    },
+    removeProduct(id) {
+      if (confirm('Are you sure?')) {
+        this.$store.dispatch('product/delete', id)
+      }
+    },
+    handlePagination(pageNumber) {
+      this.$store.commit('product/setPage', pageNumber)
+
+      this.$store.dispatch('product/listProducts', this.getPayload())
+    },
+    getPayload() {
+      const payload = { ...this.$store.state.product.filterData }
+
+      Object.keys(payload).forEach(
+        (key) => payload[key] === '' && delete payload[key]
+      )
+
+      payload.page = this.$store.state.product.page
+
+      return payload
+    },
   },
 }
 </script>

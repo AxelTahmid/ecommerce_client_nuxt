@@ -35,10 +35,17 @@ export default {
     Loader,
     statusMessages,
   },
-  fetch() {},
-  mounted() {},
+  fetch() {
+    this.$store.dispatch('category/getCategoryHtmlTree')
+    this.$store.dispatch('brand/getAllBrands')
+  },
+  mounted() {
+    this.$store.commit('product/resetProduct')
+  },
   methods: {
-    save() {},
+    save() {
+      this.$store.dispatch('product/create', { router: this.$router })
+    },
   },
 }
 </script>
