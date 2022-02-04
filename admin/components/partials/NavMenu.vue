@@ -27,8 +27,8 @@
     <li>
       <a href="#"> <i class="fas fa-gears"></i>Pending Orders</a>
     </li>
-    <li>
-      <a href="#"> <i class="fas fa-users"></i>Users</a>
+    <li :class="{ active: this.$route.path.indexOf('user') !== -1 }">
+      <nuxt-link to="/user"> <i class="fas fa-users"></i>Users</nuxt-link>
     </li>
     <li>
       <a href="#"> <i class="fas fa-sign-out-alt"></i>Logout</a>
