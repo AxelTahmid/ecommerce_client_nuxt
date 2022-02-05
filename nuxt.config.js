@@ -1,14 +1,34 @@
 export default {
+  ssr: 'true',
+  target: 'server',
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'frontend',
+    title: 'Online Shop',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', type: 'text/css', href: '/css/bootstrap.min.css' },
+      {
+        rel: 'stylesheet',
+        type: 'text/css',
+        href: '/css/font-awesome.min.css',
+      },
+      { rel: 'stylesheet', type: 'text/css', href: '/css/prettyPhoto.css' },
+      { rel: 'stylesheet', type: 'text/css', href: '/css/main.css' },
+      { rel: 'stylesheet', type: 'text/css', href: '/css/responsive.css' },
+    ],
+    script: [
+      { src: '/js/jquery.js', type: 'text/javascript' },
+      { src: '/js/bootstrap.min.js', type: 'text/javascript' },
+      { src: '/js/jquery.scrollUp.min.js', type: 'text/javascript' },
+      { src: '/js/jquery.prettyPhoto.js', type: 'text/javascript' },
+      { src: '/js/main.js', type: 'text/javascript' },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
