@@ -9,92 +9,17 @@
       data-ride="carousel"
     >
       <div class="carousel-inner">
-        <div class="item active">
-          <div class="col-sm-4">
-            <div class="product-image-wrapper">
-              <div class="single-products">
-                <div class="productinfo text-center">
-                  <img src="images/home/recommend1.jpg" alt="" />
-                  <h2>$56</h2>
-                  <p>Easy Polo Black Edition</p>
-                  <a href="#" class="btn btn-default add-to-cart"
-                    ><i class="fa fa-shopping-cart"></i>Add to cart</a
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="product-image-wrapper">
-              <div class="single-products">
-                <div class="productinfo text-center">
-                  <img src="images/home/recommend2.jpg" alt="" />
-                  <h2>$56</h2>
-                  <p>Easy Polo Black Edition</p>
-                  <a href="#" class="btn btn-default add-to-cart"
-                    ><i class="fa fa-shopping-cart"></i>Add to cart</a
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="product-image-wrapper">
-              <div class="single-products">
-                <div class="productinfo text-center">
-                  <img src="images/home/recommend3.jpg" alt="" />
-                  <h2>$56</h2>
-                  <p>Easy Polo Black Edition</p>
-                  <a href="#" class="btn btn-default add-to-cart"
-                    ><i class="fa fa-shopping-cart"></i>Add to cart</a
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <div class="col-sm-4">
-            <div class="product-image-wrapper">
-              <div class="single-products">
-                <div class="productinfo text-center">
-                  <img src="images/home/recommend1.jpg" alt="" />
-                  <h2>$56</h2>
-                  <p>Easy Polo Black Edition</p>
-                  <a href="#" class="btn btn-default add-to-cart"
-                    ><i class="fa fa-shopping-cart"></i>Add to cart</a
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="product-image-wrapper">
-              <div class="single-products">
-                <div class="productinfo text-center">
-                  <img src="images/home/recommend2.jpg" alt="" />
-                  <h2>$56</h2>
-                  <p>Easy Polo Black Edition</p>
-                  <a href="#" class="btn btn-default add-to-cart"
-                    ><i class="fa fa-shopping-cart"></i>Add to cart</a
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="product-image-wrapper">
-              <div class="single-products">
-                <div class="productinfo text-center">
-                  <img src="images/home/recommend3.jpg" alt="" />
-                  <h2>$56</h2>
-                  <p>Easy Polo Black Edition</p>
-                  <a href="#" class="btn btn-default add-to-cart"
-                    ><i class="fa fa-shopping-cart"></i>Add to cart</a
-                  >
-                </div>
-              </div>
-            </div>
+        <div
+          v-for="(item, index) in this.featuredItems"
+          :key="item.id"
+          :class="'item ' + (index == 0 ? 'active' : '')"
+        >
+          <div
+            v-for="product in item.products"
+            :key="product.id"
+            class="col-sm-4"
+          >
+            <ProductTemplateMini :item="product"></ProductTemplateMini>
           </div>
         </div>
       </div>
@@ -117,8 +42,18 @@
 </template>
 
 <script>
+import ProductTemplateMini from '../product-templates/ProductTemplateMini'
 export default {
   name: 'FeaturedProducts',
+  components: { ProductTemplateMini },
+  // eslint-disable-next-line vue/require-prop-types
+  props: ['featuredItems'],
+  mounted() {
+    console.info(this.featuredItems)
+    // re-initialize the boostrap carousal
+    // eslint-disable-next-line no-undef
+    $('#recommended-item-carousel').carousel()
+  },
 }
 </script>
 

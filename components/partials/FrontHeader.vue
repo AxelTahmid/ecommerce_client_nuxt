@@ -67,11 +67,10 @@
                 <li><nuxt-link to="/shop">Shop</nuxt-link></li>
                 <li class="dropdown">
                   <a href="#">Categories<i class="fa fa-angle-down"></i></a>
-                  <ul role="menu" class="sub-menu">
-                    <li><a href="#">Electronics</a></li>
-                    <li><a href="#">Fashion</a></li>
-                    <li><a href="#">Home Appliances</a></li>
-                  </ul>
+                  <CategoryTree
+                    v-if="this.categoriesTree.length"
+                    :data-tree="categoriesTree"
+                  ></CategoryTree>
                 </li>
                 <li><nuxt-link to="/contactus">Contact</nuxt-link></li>
               </ul>
@@ -90,8 +89,21 @@
 </template>
 
 <script>
+import { HomeApis } from '../../api/home'
+import CategoryTree from '../../components/partials/CategoryTree'
 export default {
   name: 'FrontHeader',
+  components: { CategoryTree },
+  data() {
+    return {
+      categoriesTree: [],
+    }
+  },
+  mounted() {
+    HomeApis.getCategoryMenuTree(this.$axios).then((res) => {
+      this.categoriesTree = res
+    })
+  },
 }
 </script>
 

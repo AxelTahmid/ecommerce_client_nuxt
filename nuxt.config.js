@@ -70,7 +70,14 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    devMiddleware: {
+      headers: {
+        'Cache-Control': 'no-store',
+        Vary: '*',
+      },
+    },
+  },
   srcDir: __dirname,
   buildDir: '.nuxt/frontend',
 }

@@ -15,25 +15,6 @@ module.exports = {
     'no-console': 'off',
     'vue/multi-word-component-names': 'off',
     'vue/this-in-template': 'off',
-
-    // [
-    //   'error',
-    //   {
-    //     ignores: [
-    //       'default',
-    //       'Default',
-    //       'login',
-    //       'Login',
-    //       'index',
-    //       'Index',
-    //       'create',
-    //       'Create',
-    //       'edit',
-    //       'Edit',
-    //       'loader',
-    //       'Loader',
-    //     ],
-    //   },
-    // ],
+    'vue/require-prop-types': 'off',
   },
 }

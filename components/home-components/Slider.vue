@@ -6,80 +6,41 @@
           <div id="slider-carousel" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
               <li
+                v-for="(item, index) in this.sliderProducts"
+                :key="item.id"
                 data-target="#slider-carousel"
-                data-slide-to="0"
-                class="active"
+                :data-slide-to="item.id"
+                :class="{ active: index === 0 }"
               ></li>
-              <li data-target="#slider-carousel" data-slide-to="1"></li>
-              <li data-target="#slider-carousel" data-slide-to="2"></li>
             </ol>
 
             <div class="carousel-inner">
-              <div class="item active">
+              <div
+                v-for="(item, index) in this.sliderProducts"
+                :key="item.id"
+                :class="'item ' + (index === 0 ? 'active' : '')"
+              >
                 <div class="col-sm-6">
-                  <h1><span>E</span>-SHOPPER</h1>
-                  <h2>Free E-Commerce Template</h2>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
+                  <h1>{{ item.title_short }}</h1>
+                  <p v-if="item.description_short != ''">
+                    {{ item.description_short }}
                   </p>
-                  <button type="button" class="btn btn-default get">
-                    Get it now
-                  </button>
+                  <nuxt-link
+                    :to="'/p/' + item.id + '/' + item.slug"
+                    class="btn btn-default get"
+                    >Get it now</nuxt-link
+                  >
                 </div>
                 <div class="col-sm-6">
                   <img
-                    src="images/home/girl1.jpg"
+                    :src="item.gallery[0].image_url.main_slider"
                     class="girl img-responsive"
                     alt=""
                   />
-                  <img src="images/home/pricing.png" class="pricing" alt="" />
-                </div>
-              </div>
-              <div class="item">
-                <div class="col-sm-6">
-                  <h1><span>E</span>-SHOPPER</h1>
-                  <h2>100% Responsive Design</h2>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
-                  </p>
-                  <button type="button" class="btn btn-default get">
-                    Get it now
-                  </button>
-                </div>
-                <div class="col-sm-6">
-                  <img
-                    src="images/home/girl2.jpg"
-                    class="girl img-responsive"
-                    alt=""
-                  />
-                  <img src="images/home/pricing.png" class="pricing" alt="" />
-                </div>
-              </div>
-
-              <div class="item">
-                <div class="col-sm-6">
-                  <h1><span>E</span>-SHOPPER</h1>
-                  <h2>Free Ecommerce Template</h2>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
-                  </p>
-                  <button type="button" class="btn btn-default get">
-                    Get it now
-                  </button>
-                </div>
-                <div class="col-sm-6">
-                  <img
-                    src="images/home/girl3.jpg"
-                    class="girl img-responsive"
-                    alt=""
-                  />
-                  <img src="images/home/pricing.png" class="pricing" alt="" />
+                  <div class="pricing-badge">
+                    <strong>Only</strong>
+                    <span>${{ item.price_after_discount }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -108,6 +69,15 @@
 <script>
 export default {
   name: 'Slider',
+  // eslint-disable-next-line vue/require-prop-types
+  props: ['sliderProducts'],
+  mounted() {
+    if (this.sliderProducts && this.sliderProducts.length) {
+      // re-initialize carousal
+      // eslint-disable-next-line no-undef
+      $('.carousel').carousel()
+    }
+  },
 }
 </script>
 
