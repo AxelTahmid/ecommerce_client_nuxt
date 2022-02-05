@@ -1,12 +1,10 @@
 <template>
   <section>
     <div class="container">
+      <h2 class="title text-left">Search results for "{{ this.keyword }}"</h2>
       <div class="row">
         <div class="col-sm-3">
-          <ShopSidebar
-            page-type="shop"
-            :categories-tree="categoriesTree"
-          ></ShopSidebar>
+          <ShopSidebar page-type="search"></ShopSidebar>
         </div>
 
         <div
@@ -14,8 +12,6 @@
           class="col-sm-9 padding-right"
         >
           <div class="features_items">
-            <h2 class="title text-center">Latest Items</h2>
-
             <div
               v-for="(item, index) in this.products.data"
               :key="index"
@@ -32,8 +28,8 @@
         </div>
         <div v-else class="col-sm-9 padding-right">
           <p class="text-center no-products">
-            <i class="fa fa-exclamation-triangle"></i> No products found that
-            match your search criteria!
+            <i class="fa fa-exclamation-triangle"></i> No products available
+            found that match your search criteria!
           </p>
         </div>
       </div>
@@ -48,29 +44,30 @@ import FrontPagination from '../components/helpers/FrontPagination'
 import { paginate } from '../helpers/functions'
 
 export default {
-  name: 'Shop',
+  name: 'Search',
   components: {
     FrontPagination,
     ProductTemplateNormal,
     ShopSidebar,
   },
-
+  data() {
+    return {
+      keyword: '',
+    }
+  },
   head() {
     return {
-      title: 'Online Shop | Shop',
+      title: 'Online Shop | Search',
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: 'Shop Page',
+          content: 'Search Page',
         },
       ],
     }
   },
   computed: {
-    categoriesTree() {
-      return this.$store.state.general.categoriesTree
-    },
     products() {
       return this.$store.state.general.shop.products
     },
@@ -78,27 +75,18 @@ export default {
       return this.$store.state.general.shop.page
     },
   },
-
   mounted() {
     // reset shop filter
     this.$store.dispatch('general/resetShopFilter')
 
+    if (this.$route.query.keyword) {
+      this.keyword = this.$route.query.keyword
+
+      this.$store.commit('general/setKeyword', this.$route.query.keyword)
+    }
+
     if (this.$route.query.page) {
       this.$store.commit('general/setPage', this.$route.query.page)
-    }
-
-    if (this.$route.query.category_id) {
-      this.$store.commit('general/setCategoryId', this.$route.query.category_id)
-
-      // load brands by this category
-      this.$store.dispatch(
-        'general/fetchBrandsByCategory',
-        this.$route.query.category_id
-      )
-    }
-
-    if (this.$route.query.brand_id) {
-      this.$store.commit('general/setBrand', this.$route.query.brand_id)
     }
 
     if (this.$route.query.from_price) {

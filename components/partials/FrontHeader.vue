@@ -9,7 +9,7 @@
           <div class="col-sm-4">
             <div class="logo pull-left">
               <nuxt-link to="/"
-                ><img src="/images/home/logo.png" alt=""
+                ><img src="/images/home/logo.png?f3345d&f3345d" alt=""
               /></nuxt-link>
             </div>
           </div>
@@ -63,8 +63,20 @@
             </div>
             <div class="mainmenu pull-left">
               <ul class="nav navbar-nav collapse navbar-collapse">
-                <li><nuxt-link to="/" class="active">Home</nuxt-link></li>
-                <li><nuxt-link to="/shop">Shop</nuxt-link></li>
+                <li>
+                  <nuxt-link
+                    to="/"
+                    :class="{ active: this.$route.path === '/' }"
+                    >Home</nuxt-link
+                  >
+                </li>
+                <li>
+                  <nuxt-link
+                    to="/shop"
+                    :class="{ active: this.$route.path.indexOf('shop') !== -1 }"
+                    >Shop</nuxt-link
+                  >
+                </li>
                 <li class="dropdown">
                   <a href="#">Categories<i class="fa fa-angle-down"></i></a>
                   <CategoryTree
@@ -72,14 +84,29 @@
                     :data-tree="categoriesTree"
                   ></CategoryTree>
                 </li>
-                <li><nuxt-link to="/contactus">Contact</nuxt-link></li>
+                <li>
+                  <nuxt-link
+                    to="/contactus"
+                    :class="{
+                      active: this.$route.path.indexOf('contactus') !== -1,
+                    }"
+                    >Contact</nuxt-link
+                  >
+                </li>
               </ul>
             </div>
           </div>
           <div class="col-sm-3">
-            <div class="search_box pull-right">
-              <input type="text" placeholder="Search" />
-            </div>
+            <form method="get" @submit.prevent="search()">
+              <div class="search_box pull-right">
+                <input
+                  v-model="keyword"
+                  type="text"
+                  name="keyword"
+                  placeholder="Search"
+                />
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -89,22 +116,41 @@
 </template>
 
 <script>
-import { HomeApis } from '../../api/home'
 import CategoryTree from '../../components/partials/CategoryTree'
 export default {
   name: 'FrontHeader',
   components: { CategoryTree },
   data() {
     return {
-      categoriesTree: [],
+      keyword: '',
     }
   },
+  computed: {
+    categoriesTree() {
+      return this.$store.state.general.categoriesTree
+    },
+  },
   mounted() {
-    HomeApis.getCategoryMenuTree(this.$axios).then((res) => {
-      this.categoriesTree = res
-    })
+    this.$store.dispatch('general/fetchCategoryTree')
+  },
+  methods: {
+    search() {
+      // reset shop filter
+      this.$store.dispatch('general/resetShopFilter')
+
+      this.$store.commit('general/setKeyword', this.keyword)
+
+      this.$router.push({ path: '/search', query: { keyword: this.keyword } })
+
+      this.$store.dispatch('general/fetchShopProducts')
+    },
   },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.search_box input {
+  font-size: 18px;
+  color: #424040;
+}
+</style>
