@@ -17,7 +17,9 @@
             <div class="shop-menu pull-right">
               <ul class="nav navbar-nav">
                 <li>
-                  <a href="#"><i class="fa fa-user"></i> Account</a>
+                  <nuxt-link to="/account"
+                    ><i class="fa fa-user"></i> Account</nuxt-link
+                  >
                 </li>
                 <li>
                   <a href="#"><i class="fa fa-star"></i> Wishlist</a>
@@ -30,9 +32,14 @@
                     ><i class="fa fa-shopping-cart"></i> Cart</nuxt-link
                   >
                 </li>
-                <li>
+                <li v-if="!this.isLogged">
                   <nuxt-link to="/login"
-                    ><i class="fa fa-lock"></i> Login</nuxt-link
+                    ><i class="fa fa-sign-in"></i> Login</nuxt-link
+                  >
+                </li>
+                <li v-if="this.isLogged">
+                  <a href="#" @click.prevent="signout()"
+                    ><i class="fa fa-sign-out"></i> Sign out</a
                   >
                 </li>
               </ul>
@@ -129,6 +136,9 @@ export default {
     categoriesTree() {
       return this.$store.state.general.categoriesTree
     },
+    isLogged() {
+      return this.$store.state.general.auth.is_logged
+    },
   },
   mounted() {
     this.$store.dispatch('general/fetchCategoryTree')
@@ -143,6 +153,34 @@ export default {
       this.$router.push({ path: '/search', query: { keyword: this.keyword } })
 
       this.$store.dispatch('general/fetchShopProducts')
+    },
+    signout() {
+      this.$axios.setHeader(
+        'Authorization',
+        'Bearer ' + localStorage.getItem('auth_token')
+      )
+      this.$axios
+        .get('/api/logout')
+        .then((response) => {
+          if (response.data.success) {
+            localStorage.removeItem('auth_token')
+            localStorage.removeItem('is_authenticated')
+            localStorage.removeItem('user_data')
+
+            this.$store.dispatch('general/resetAuthData')
+
+            this.onAfterSignout()
+
+            this.$router.push('/')
+          }
+        })
+        .catch((err) => {
+          console.log(err.response)
+          this.onAfterSignout()
+        })
+    },
+    onAfterSignout() {
+      // todo when implementing the cart
     },
   },
 }
