@@ -10,15 +10,25 @@
         <h2>${{ item.price_after_discount }}</h2>
         <del v-if="item.is_discount_active">${{ item.price }}</del>
         <p>
-          <nuxt-link :to="'/p/' + item.id + '/' + item.slug">{{
-            item.title_short
-          }}</nuxt-link>
+          <nuxt-link
+            class="item-title"
+            :to="'/p/' + item.id + '/' + item.slug"
+            >{{ item.title_short }}</nuxt-link
+          >
         </p>
         <a
+          v-if="!this.isProductAddedToCart(item.id)"
           href="javascript:void(0);"
           class="btn btn-default add-to-cart"
-          @click="addToCart(item.id)"
+          @click.prevent="addToCart(item.id)"
           ><i class="fa fa-shopping-cart"></i>Add to cart</a
+        >
+        <a
+          v-if="this.isProductAddedToCart(item.id)"
+          href="javascript:void(0);"
+          class="btn btn-default add-to-cart"
+          @click.prevent="removeFromCart(item.id)"
+          ><i class="fa fa-shopping-cart"></i>Remove from cart</a
         >
       </div>
       <div v-if="item.is_discount_active" class="discount-ribbon">
@@ -29,13 +39,31 @@
 </template>
 
 <script>
+import {
+  addToCart,
+  removeFromCartByProductId,
+  isProductInCart,
+} from '../../helpers/cart'
+
 export default {
   name: 'ProductTemplateMini',
   props: ['item'],
   methods: {
-    addToCart(productId) {},
+    addToCart(productId) {
+      addToCart(productId, 1, this.$store, this.$router)
+    },
+    isProductAddedToCart(productId) {
+      return isProductInCart(productId, this.$store)
+    },
+    removeFromCart(productId) {
+      removeFromCartByProductId(productId, this.$store, this.$router)
+    },
   },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.item-title {
+  color: #696763;
+}
+</style>

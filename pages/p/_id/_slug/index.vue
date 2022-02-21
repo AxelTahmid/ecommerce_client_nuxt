@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable vue/no-template-shadow  -->
   <section>
     <div class="container">
       <div class="row">
@@ -13,11 +12,37 @@
                 class="carousel slide"
                 data-ride="carousel"
               >
+                <div
+                  v-if="this.$store.state.cart.success_message != ''"
+                  class="alert alert-success"
+                >
+                  {{ this.$store.state.cart.success_message }}
+                </div>
+                <div
+                  v-if="this.$store.state.cart.error_message != ''"
+                  class="alert alert-danger"
+                >
+                  {{ this.$store.state.cart.error_message }}
+                </div>
+
+                <div
+                  v-if="this.$store.state.cart.validation_errors.length"
+                  class="sufee-alert alert with-close alert-danger alert-dismissible"
+                >
+                  <ul
+                    v-for="(error, index) in this.$store.state.cart
+                      .validation_errors"
+                    :key="index"
+                  >
+                    <li>{{ error }}</li>
+                  </ul>
+                </div>
+
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner">
                   <div
                     v-for="(imageItem, index) in this.product.gallery"
-                    :key="index"
+                    :key="imageItem"
                     :class="'item ' + (index == 0 ? 'active' : '')"
                   >
                     <a href=""
@@ -65,18 +90,31 @@
                 >
                 <span>
                   <span>${{ this.product.price_after_discount }}</span>
-                  <span v-if="this.product.amount > 0">
+                  <span
+                    v-if="
+                      this.product.amount > 0 &&
+                      !isProductAddedToCart(this.product.id)
+                    "
+                  >
                     <label>Quantity:</label>
-                    <input type="text" value="1" />
+                    <input v-model="cart_quantity" type="text" min="1" />
                     <button
                       type="button"
                       class="btn btn-fefault cart"
-                      @click="addToCart(this.product.id)"
+                      @click="addToCart(product.id)"
                     >
                       <i class="fa fa-shopping-cart"></i>
                       Add to cart
                     </button>
                   </span>
+                  <button
+                    v-if="isProductAddedToCart(product.id)"
+                    type="button"
+                    class="btn btn-fefault cart"
+                    @click="removeFromCart(product.id)"
+                  >
+                    <i class="fa fa-trash-o"></i> Remove from cart
+                  </button>
                 </span>
                 <p>
                   <b>Availability:</b>
@@ -175,11 +213,13 @@
                   :class="'item ' + (index == 0 ? 'active' : '')"
                 >
                   <div
-                    v-for="product in item.products"
-                    :key="product.id"
+                    v-for="productarr in item.products"
+                    :key="productarr.id"
                     class="col-sm-4"
                   >
-                    <ProductTemplateMini :item="product"></ProductTemplateMini>
+                    <ProductTemplateMini
+                      :item="productarr"
+                    ></ProductTemplateMini>
                   </div>
                 </div>
               </div>
@@ -207,10 +247,14 @@
 
 <script>
 /* eslint-disable no-undef */
-
 import { ProductApi } from '../../../../api/product'
 import { ShopApi } from '../../../../api/shop'
 import ProductTemplateMini from '../../../../components/product-templates/ProductTemplateMini'
+import {
+  addToCart,
+  removeFromCartByProductId,
+  isProductInCart,
+} from '../../../../helpers/cart'
 
 export default {
   name: 'ProductDetails',
@@ -251,6 +295,7 @@ export default {
   data() {
     return {
       similarProducts: [],
+      cart_quantity: 1,
     }
   },
   head() {
@@ -269,7 +314,6 @@ export default {
       ],
     }
   },
-
   mounted() {
     setTimeout(() => {
       // re-initialize carousal
@@ -313,7 +357,30 @@ export default {
     }, 200)
   },
   methods: {
-    addToCart(productId) {},
+    addToCart(productId) {
+      if (isNaN(parseInt(this.cart_quantity))) {
+        alert('Please enter an integer value')
+        return
+      }
+
+      if (parseInt(this.cart_quantity) <= 0) {
+        alert('Please enter a value greater than or equal 1')
+        return
+      }
+
+      addToCart(
+        productId,
+        parseInt(this.cart_quantity),
+        this.$store,
+        this.$router
+      )
+    },
+    isProductAddedToCart(productId) {
+      return isProductInCart(productId, this.$store)
+    },
+    removeFromCart(productId) {
+      removeFromCartByProductId(productId, this.$store, this.$router)
+    },
   },
 }
 </script>

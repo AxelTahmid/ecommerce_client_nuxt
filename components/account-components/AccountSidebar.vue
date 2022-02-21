@@ -53,6 +53,8 @@ export default {
 
             this.$store.dispatch('general/resetAuthData')
 
+            this.$store.commit('cart/clear')
+
             this.$router.push('/')
           }
         })

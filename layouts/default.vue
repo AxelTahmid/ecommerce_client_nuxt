@@ -1,23 +1,37 @@
 <template>
   <div>
     <FrontHeader></FrontHeader>
+
     <Nuxt />
+
     <FrontFooter></FrontFooter>
   </div>
 </template>
+
 <script>
 import FrontHeader from '../components/partials/FrontHeader'
 import FrontFooter from '../components/partials/FrontFooter'
+
 export default {
   components: { FrontFooter, FrontHeader },
   mounted() {
     this.isAuthenticated()
+
     const verify = setInterval(this.checkUserLogin, 8000)
+
     if (
       !this.$store.state.general.auth.is_logged ||
       !this.$store.state.general.auth.auth_token
     ) {
       clearInterval(verify)
+    }
+
+    // fetch shopping cart
+    if (
+      localStorage.getItem('is_authenticated') === '1' &&
+      localStorage.getItem('auth_token') != null
+    ) {
+      this.$store.dispatch('cart/getAll')
     }
   },
   methods: {
@@ -35,7 +49,8 @@ export default {
           })
         } else {
           this.$store.dispatch('general/resetAuthData')
-          // todo when implemeting cart
+
+          this.$store.commit('cart/clear')
         }
       }
     },
@@ -50,6 +65,7 @@ export default {
             'Authorization',
             'Bearer ' + localStorage.getItem('auth_token')
           )
+
           this.$axios
             .$get('api/check-login')
             .then((response) => {
@@ -57,19 +73,25 @@ export default {
                 localStorage.removeItem('auth_token')
                 localStorage.removeItem('is_authenticated')
                 localStorage.removeItem('user_data')
+
                 this.$store.dispatch('general/resetAuthData')
-                // todo when implemeting cart
+
+                this.$store.commit('cart/clear')
+
                 this.$router.push('/')
               }
             })
-            // eslint-disable-next-line node/handle-callback-err
             .catch((err) => {
               localStorage.removeItem('auth_token')
               localStorage.removeItem('is_authenticated')
               localStorage.removeItem('user_data')
+
               this.$store.dispatch('general/resetAuthData')
-              // todo when implemeting cart
+
+              this.$store.commit('cart/clear')
+
               this.$router.push('/')
+              console.log(err)
             })
         } else {
           this.$store.dispatch('general/resetAuthData')

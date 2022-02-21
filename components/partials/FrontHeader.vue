@@ -25,11 +25,18 @@
                   <a href="#"><i class="fa fa-star"></i> Wishlist</a>
                 </li>
                 <li>
-                  <a href="#"><i class="fa fa-list"></i> My Orders</a>
+                  <nuxt-link to="/orders"
+                    ><i class="fa fa-list"></i> My Orders</nuxt-link
+                  >
                 </li>
                 <li>
                   <nuxt-link to="/cart"
-                    ><i class="fa fa-shopping-cart"></i> Cart</nuxt-link
+                    ><i class="fa fa-shopping-cart"></i> Cart
+                    <span
+                      v-if="this.cart.length > 0"
+                      class="badge badge-danger"
+                      >{{ this.cart.length }}</span
+                    ></nuxt-link
                   >
                 </li>
                 <li v-if="!this.isLogged">
@@ -139,6 +146,9 @@ export default {
     isLogged() {
       return this.$store.state.general.auth.is_logged
     },
+    cart() {
+      return this.$store.state.cart.cart
+    },
   },
   mounted() {
     this.$store.dispatch('general/fetchCategoryTree')
@@ -180,7 +190,7 @@ export default {
         })
     },
     onAfterSignout() {
-      // todo when implementing the cart
+      this.$store.commit('cart/clear')
     },
   },
 }
@@ -190,5 +200,10 @@ export default {
 .search_box input {
   font-size: 18px;
   color: #424040;
+}
+
+.badge-danger {
+  color: #fff;
+  background-color: #dc3545;
 }
 </style>
