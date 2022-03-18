@@ -80,4 +80,7 @@ export default {
   },
   srcDir: __dirname,
   buildDir: '.nuxt/frontend',
+  env: {
+    PAYPAL_CLIENT_ID: 'Your Client ID', // add your client ID that you created in the previous step
+  },
 }
