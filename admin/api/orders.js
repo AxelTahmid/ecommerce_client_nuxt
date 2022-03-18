@@ -13,6 +13,18 @@ const OrdersApi = {
     OrdersApi.setAuthToken(axios)
     return axios.$get('/api/orders')
   },
+  show: (axios, id) => {
+    OrdersApi.setAuthToken(axios)
+    return axios.$get('/api/orders/' + id)
+  },
+  update: (axios, id, status) => {
+    OrdersApi.setAuthToken(axios)
+    return axios.$put('/api/orders/' + id, { status })
+  },
+  getLatestPending: (axios) => {
+    OrdersApi.setAuthToken(axios)
+    return axios.$get('/api/orders/latest-pending-orders')
+  },
 }
 
 export { OrdersApi }
